@@ -7,9 +7,3 @@ class BookAdmin(admin.ModelAdmin):
     search_fields = ('title', 'author')                     # Enable search
 
 admin.site.register(Book, BookAdmin)
-
-<<<<<<< HEAD
-
-
-=======
->>>>>>> 5db3d54 (Register Book model and customize admin interface)
