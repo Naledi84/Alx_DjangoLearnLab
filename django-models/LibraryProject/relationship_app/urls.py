@@ -12,3 +12,4 @@ urlpatterns = [
     path('register/', register, name='register'),
 ]
 
+
