@@ -20,4 +20,10 @@ from django.urls import path, include
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('relationship/', include('relationship_app.urls')),
+<<<<<<< HEAD
 ]
+=======
+    path('relationship/', include('relationship_app.urls')),
+
+]
+>>>>>>> 5ad4e561923878743f2ab283f86ff092cdbcf213
