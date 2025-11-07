@@ -12,6 +12,7 @@ class Author(models.Model):
 class Book(models.Model):
     title = models.CharField(max_length=255)
     author = models.ForeignKey(Author, on_delete=models.CASCADE)
+    publication_year = models.PositiveIntegerField(null=True, blank=True)  # ✅ Added field
 
     def __str__(self):
         return self.title
@@ -25,7 +26,7 @@ class Book(models.Model):
 
 class Library(models.Model):
     name = models.CharField(max_length=100)
-    books = models.ManyToManyField(Book)  # Now safe to reference directly
+    books = models.ManyToManyField(Book)
 
     def __str__(self):
         return self.name
