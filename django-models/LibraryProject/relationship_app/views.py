@@ -5,6 +5,7 @@ from .models import Book, Library
 from django.contrib.auth.decorators import user_passes_test
 from django.shortcuts import render
 from .models import UserProfile
+from django.contrib.auth.decorators import permission_required
 
 # 📚 Class-Based View: Library Detail
 class LibraryDetailView(DetailView):
@@ -50,3 +51,15 @@ def librarian_view(request):
 @user_passes_test(is_member)
 def member_view(request):
     return render(request, 'relationship_app/member_view.html')
+
+@permission_required('relationship_app.can_add_book')
+def add_book(request):
+    return HttpResponse("Add Book View")
+
+@permission_required('relationship_app.can_change_book')
+def edit_book(request):
+    return HttpResponse("Edit Book View")
+
+@permission_required('relationship_app.can_delete_book')
+def delete_book(request):
+    return HttpResponse("Delete Book View")
