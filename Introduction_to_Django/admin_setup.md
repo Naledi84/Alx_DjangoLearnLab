@@ -1,3 +1,10 @@
+# Django Admin Setup for Book Model
+
+## Registration
+
+bookshelf/admin.py:
+
+```python
 from django.contrib import admin
 from .models import Book
 
@@ -7,3 +14,4 @@ class BookAdmin(admin.ModelAdmin):
     list_filter = ('publication_year', 'author')
     search_fields = ('title', 'author')
 
+```
