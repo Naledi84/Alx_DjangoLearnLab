@@ -21,32 +21,30 @@ class DetailView(generics.RetrieveAPIView):
 
 
 # -----------------------------
-# CREATE VIEW — Authenticated
+# CREATE VIEW — Authenticated to modify, read-only for others
 # -----------------------------
 class CreateView(generics.CreateAPIView):
     queryset = Book.objects.all()
     serializer_class = BookSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
     def perform_create(self, serializer):
         serializer.save()
 
 
 # -----------------------------
-# UPDATE VIEW — Authenticated
+# UPDATE VIEW — Authenticated to modify, read-only for others
 # -----------------------------
 class UpdateView(generics.UpdateAPIView):
     queryset = Book.objects.all()
     serializer_class = BookSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
 
 # -----------------------------
-# DELETE VIEW — Authenticated
+# DELETE VIEW — Authenticated to modify, read-only for others
 # -----------------------------
 class DeleteView(generics.DestroyAPIView):
     queryset = Book.objects.all()
     serializer_class = BookSerializer
-    permission_classes = [permissions.IsAuthenticated]
-
-
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
