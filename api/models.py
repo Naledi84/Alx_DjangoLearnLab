@@ -1,18 +1,30 @@
 from django.db import models
+from django.utils import timezone
 
+# Author model stores writer's basic information.
+# One author can have multiple books (One-to-Many).
 class Author(models.Model):
-    # Represents a writer with a name
     name = models.CharField(max_length=100)
 
     def __str__(self):
         return self.name
 
+
+# Book model stores book details including title,
+# publication year, and a link to the Author.
+# The author field creates a one-to-many relationship.
 class Book(models.Model):
-    # Represents a book with title, year, and linked author
     title = models.CharField(max_length=200)
     publication_year = models.IntegerField()
-    author = models.ForeignKey(Author, related_name='books', on_delete=models.CASCADE)
+    
+    # ForeignKey creates a one author → many books relationship
+    author = models.ForeignKey(
+        Author,
+        related_name='books',  # used to access all books of an author
+        on_delete=models.CASCADE
+    )
 
     def __str__(self):
-        return f"{self.title} ({self.publication_year})"
+        return self.title
+
 
