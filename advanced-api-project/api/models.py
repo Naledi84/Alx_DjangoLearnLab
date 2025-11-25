@@ -15,18 +15,9 @@ class Author(models.Model):
 # The author field creates a one-to-many relationship.
 class Book(models.Model):
     title = models.CharField(max_length=100)
-    author = models.CharField(max_length=100)
+    author = models.CharField(max_length=100)   # ✔ KEEP AS CHARFIELD
     created_at = models.DateTimeField(auto_now_add=True)
     publication_year = models.IntegerField()
-    
-    # ForeignKey creates a one author → many books relationship
-    author = models.ForeignKey(
-        Author,
-        related_name='books',  # used to access all books of an author
-        on_delete=models.CASCADE
-    )
 
     def __str__(self):
         return self.title
-
-
