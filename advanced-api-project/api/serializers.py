@@ -31,3 +31,4 @@ class AuthorSerializer(serializers.ModelSerializer):
         model = Author
         fields = ['id', 'name', 'books']
         # `books` comes from related_name='books' in Book model
+
