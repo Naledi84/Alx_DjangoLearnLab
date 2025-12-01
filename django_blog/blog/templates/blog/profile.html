@@ -1,0 +1,23 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Profile</title>
+    <link rel="stylesheet" href="{% static 'blog/css/auth.css' %}">
+</head>
+<body>
+
+<div class="form-container">
+    <h2>Your Profile</h2>
+
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ user_form.as_p }}
+        {{ profile_form.as_p }}
+
+        <button type="submit">Update Profile</button>
+    </form>
+</div>
+
+</body>
+</html>
