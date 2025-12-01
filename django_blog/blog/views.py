@@ -41,3 +41,6 @@ def profile_view(request):
         'p_form': p_form,
     }
     return render(request, 'blog/profile.html', context)
+
+def home(request):
+    return render(request, 'home.html')
