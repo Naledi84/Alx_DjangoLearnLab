@@ -1,32 +1,42 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import login
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
-from .models import Post
-from .forms import SignUpForm, UserUpdateForm, ProfileUpdateForm
 
+from .models import Post, Comment
+from .forms import SignUpForm, UserUpdateForm, ProfileUpdateForm, CommentForm
+
+
+# -----------------------
+# User Registration View
+# -----------------------
 def signup_view(request):
     if request.method == 'POST':
         form = SignUpForm(request.POST)
         if form.is_valid():
             user = form.save()
-            # log the user in after registration
             login(request, user)
             messages.success(request, 'Account created successfully — welcome!')
-            return redirect('blog:post_list')  # or profile page
+            return redirect('blog:post_list')
         else:
             messages.error(request, 'Please correct the errors below.')
     else:
         form = SignUpForm()
+
     return render(request, 'blog/signup.html', {'form': form})
 
+
+# -----------------------
+# Profile View
+# -----------------------
 @login_required
 def profile_view(request):
     if request.method == 'POST':
         u_form = UserUpdateForm(request.POST, instance=request.user)
         p_form = ProfileUpdateForm(request.POST, request.FILES, instance=request.user.profile)
+
         if u_form.is_valid() and p_form.is_valid():
             u_form.save()
             p_form.save()
@@ -38,15 +48,12 @@ def profile_view(request):
         u_form = UserUpdateForm(instance=request.user)
         p_form = ProfileUpdateForm(instance=request.user.profile)
 
-    context = {
-        'u_form': u_form,
-        'p_form': p_form,
-    }
-    return render(request, 'blog/profile.html', context)
+    return render(request, 'blog/profile.html', {'u_form': u_form, 'p_form': p_form})
 
-def home(request):
-    return render(request, 'home.html')
 
+# -----------------------
+# Post Views
+# -----------------------
 class PostList(ListView):
     model = Post
     template_name = 'blog/post_list.html'
@@ -74,6 +81,45 @@ class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     template_name = 'blog/post_form.html'
 
     def test_func(self):
-        post = self.get_object()
-        return self.request.user == post.author
+        return self.request.user == self.get_object().author
 
+
+# -----------------------
+# Comment Views
+# -----------------------
+class CommentCreateView(LoginRequiredMixin, CreateView):
+    model = Comment
+    form_class = CommentForm
+    template_name = "blog/comment_form.html"
+
+    def form_valid(self, form):
+        post = get_object_or_404(Post, pk=self.kwargs['post_id'])
+        form.instance.post = post
+        form.instance.author = self.request.user
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return self.object.post.get_absolute_url()
+
+
+class CommentUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+    model = Comment
+    form_class = CommentForm
+    template_name = "blog/comment_form.html"
+
+    def test_func(self):
+        return self.request.user == self.get_object().author
+
+    def get_success_url(self):
+        return self.object.post.get_absolute_url()
+
+
+class CommentDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+    model = Comment
+    template_name = "blog/comment_confirm_delete.html"
+
+    def test_func(self):
+        return self.request.user == self.get_object().author
+
+    def get_success_url(self):
+        return self.object.post.get_absolute_url()
