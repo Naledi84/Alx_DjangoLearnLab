@@ -19,7 +19,7 @@ def signup_view(request):
             user = form.save()
             login(request, user)
             messages.success(request, 'Account created successfully — welcome!')
-            return redirect('blog:post_list')
+            return redirect('blog:post-list')
         else:
             messages.error(request, 'Please correct the errors below.')
     else:
@@ -83,6 +83,17 @@ class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     def test_func(self):
         return self.request.user == self.get_object().author
 
+
+class PostDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+    model = Post
+    template_name = "blog/post_confirm_delete.html"
+
+    def test_func(self):
+        return self.request.user == self.get_object().author
+
+    def get_success_url(self):
+        return "/"
+    
 
 # -----------------------
 # Comment Views
