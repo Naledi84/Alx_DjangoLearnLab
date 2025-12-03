@@ -4,7 +4,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
-
+from django.db.models import Q
 from .models import Post, Comment
 from .forms import SignUpForm, UserUpdateForm, ProfileUpdateForm, CommentForm
 
@@ -67,7 +67,7 @@ class PostDetail(DetailView):
 
 class PostCreateView(LoginRequiredMixin, CreateView):
     model = Post
-    fields = ['title', 'content']
+    form_class = PostForm               # <-- FIXED
     template_name = 'blog/post_form.html'
 
     def form_valid(self, form):
@@ -77,7 +77,7 @@ class PostCreateView(LoginRequiredMixin, CreateView):
 
 class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Post
-    fields = ['title', 'content']
+    form_class = PostForm               # <-- FIXED
     template_name = 'blog/post_form.html'
 
     def test_func(self):
@@ -134,3 +134,17 @@ class CommentDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
 
     def get_success_url(self):
         return self.object.post.get_absolute_url()
+        
+def search_view(request):
+    query = request.GET.get("q")
+    results = []
+
+    if query:
+        results = Post.objects.filter(
+            Q(title__icontains=query) |
+            Q(content__icontains=query) |
+            Q(tags__name__icontains=query)
+        ).distinct()
+
+    return render(request, "blog/search_results.html", {"results": results, "query": query})
+
