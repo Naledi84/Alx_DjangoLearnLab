@@ -4,7 +4,7 @@ from .views import (
     LoginAPIView,
     ProfileRetrieveUpdateAPIView,
     FollowUserAPIView,
-    UnfollowUserAPIView,
+    UnfollowUserAPIView
 )
 
 urlpatterns = [
@@ -12,8 +12,9 @@ urlpatterns = [
     path('login/', LoginAPIView.as_view(), name='login'),
     path('profile/', ProfileRetrieveUpdateAPIView.as_view(), name='profile'),
 
-    # NEW FOLLOW / UNFOLLOW ENDPOINTS
+    # NEW FOLLOW ROUTES
     path('follow/<int:user_id>/', FollowUserAPIView.as_view(), name='follow-user'),
     path('unfollow/<int:user_id>/', UnfollowUserAPIView.as_view(), name='unfollow-user'),
 ]
+
 

@@ -10,4 +10,3 @@ urlpatterns = [
     path('', include(router.urls)),
     path('feed/', FeedAPIView.as_view(), name='feed'),
 ]
-
