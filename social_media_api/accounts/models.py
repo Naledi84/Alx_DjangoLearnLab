@@ -1,25 +1,26 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 
+
 class User(AbstractUser):
     """
-    Custom user model for social media API.
-    - bio: short biography text
-    - profile_picture: optional image upload (requires Pillow)
-    - followers: many-to-many to self to represent followers (symmetrical=False)
+    Custom user model for the Social Media API.
     """
-    bio = models.TextField(blank=True, null=True)
-    # Use ImageField if you want uploads (install pillow). Otherwise change to URLField for image URLs.
-    profile_picture = models.ImageField(upload_to='profiles/', blank=True, null=True)
 
-    # Users who follow this user. symmetrical=False so following vs followers are distinct.
-    followers = models.ManyToManyField(
+    bio = models.TextField(blank=True, null=True)
+
+    # Profile image (optional)
+    profile_image = models.ImageField(upload_to='profiles/', blank=True, null=True)
+
+    # Users THIS user follows
+    following = models.ManyToManyField(
         'self',
         symmetrical=False,
-        related_name='following',
+        related_name='followers',  # users who follow this user
         blank=True
     )
 
     def __str__(self):
         return self.username
+
 
