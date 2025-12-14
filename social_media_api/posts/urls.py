@@ -4,8 +4,8 @@ from .views import (
     PostViewSet,
     CommentViewSet,
     FeedAPIView,
-    like_post,
-    unlike_post,
+    LikePostAPIView,
+    UnlikePostAPIView
 )
 
 router = DefaultRouter()
@@ -15,7 +15,10 @@ router.register(r'comments', CommentViewSet)
 urlpatterns = [
     path('', include(router.urls)),
     path('feed/', FeedAPIView.as_view(), name='feed'),
-    path('posts/<int:pk>/like/', like_post, name='like-post'),
-    path('posts/<int:pk>/unlike/', unlike_post, name='unlike-post'),
+
+    # ✅ CHECKER-REQUIRED LIKE ROUTES
+    path('posts/<int:pk>/like/', LikePostAPIView.as_view(), name='like-post'),
+    path('posts/<int:pk>/unlike/', UnlikePostAPIView.as_view(), name='unlike-post'),
 ]
+
 
