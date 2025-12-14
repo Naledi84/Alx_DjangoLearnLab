@@ -1,20 +1,17 @@
 from django.urls import path
 from .views import (
-    RegisterAPIView,
-    LoginAPIView,
-    ProfileRetrieveUpdateAPIView,
+    UserListAPIView,
+    UserDetailAPIView,
     FollowUserAPIView,
-    UnfollowUserAPIView
+    UnfollowUserAPIView,
 )
 
 urlpatterns = [
-    path('register/', RegisterAPIView.as_view(), name='register'),
-    path('login/', LoginAPIView.as_view(), name='login'),
-    path('profile/', ProfileRetrieveUpdateAPIView.as_view(), name='profile'),
-
-    # NEW FOLLOW ROUTES
-    path('follow/<int:user_id>/', FollowUserAPIView.as_view(), name='follow-user'),
-    path('unfollow/<int:user_id>/', UnfollowUserAPIView.as_view(), name='unfollow-user'),
+    path('users/', UserListAPIView.as_view(), name='user-list'),
+    path('users/<int:pk>/', UserDetailAPIView.as_view(), name='user-detail'),
+    path('follow/<int:pk>/', FollowUserAPIView.as_view(), name='follow-user'),
+    path('unfollow/<int:pk>/', UnfollowUserAPIView.as_view(), name='unfollow-user'),
 ]
+
 
 
